@@ -1,0 +1,108 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvinh0704v156"]
+
+[ext_resource type="Script" path="res://UI/BasicPaint/tools_panel.gd" id="1_362us"]
+[ext_resource type="Script" path="res://UI/BasicPaint/painting_manager.gd" id="1_bfiik"]
+[ext_resource type="Script" path="res://UI/BasicPaint/painter.gd" id="3_fgfar"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q2y2p"]
+bg_color = Color(0.92549, 0.698039, 0.513726, 1)
+
+[node name="PaintInterface" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bfiik")
+
+[node name="MainContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ToolsPanel" type="PanelContainer" parent="MainContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 250)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("1_362us")
+
+[node name="Tools" type="VBoxContainer" parent="MainContainer/HBoxContainer/ToolsPanel"]
+layout_mode = 2
+
+[node name="LabelBrushSize" type="Label" parent="MainContainer/HBoxContainer/ToolsPanel/Tools"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Brush size: 32px"
+horizontal_alignment = 1
+
+[node name="HScrollBrushSize" type="HScrollBar" parent="MainContainer/HBoxContainer/ToolsPanel/Tools"]
+custom_minimum_size = Vector2(90, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+min_value = 2.0
+step = 2.0
+value = 32.0
+
+[node name="LabelColorPicker" type="Label" parent="MainContainer/HBoxContainer/ToolsPanel/Tools"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Current color"
+horizontal_alignment = 1
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="MainContainer/HBoxContainer/ToolsPanel/Tools"]
+custom_minimum_size = Vector2(90, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainContainer/HBoxContainer/ToolsPanel/Tools"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+size_flags_stretch_ratio = 3.5
+
+[node name="UndoButton" type="Button" parent="MainContainer/HBoxContainer/ToolsPanel/Tools/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Undo"
+
+[node name="ClearButton" type="Button" parent="MainContainer/HBoxContainer/ToolsPanel/Tools/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "Clear"
+
+[node name="SaveButton" type="Button" parent="MainContainer/HBoxContainer/ToolsPanel/Tools"]
+custom_minimum_size = Vector2(25, 15)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "Save"
+
+[node name="DrawingAreaBG" type="Panel" parent="MainContainer/HBoxContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(500, 500)
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_q2y2p")
+script = ExtResource("3_fgfar")
+
+[node name="SaveFileDialog" type="FileDialog" parent="."]
+size = Vector2i(392, 159)
+
+[connection signal="draw_request" from="." to="MainContainer/HBoxContainer/DrawingAreaBG" method="_on_draw_request"]
+[connection signal="value_changed" from="MainContainer/HBoxContainer/ToolsPanel/Tools/HScrollBrushSize" to="." method="_on_h_scroll_brush_size_value_changed"]
+[connection signal="value_changed" from="MainContainer/HBoxContainer/ToolsPanel/Tools/HScrollBrushSize" to="MainContainer/HBoxContainer/ToolsPanel" method="_on_h_scroll_brush_size_value_changed"]
+[connection signal="color_changed" from="MainContainer/HBoxContainer/ToolsPanel/Tools/ColorPickerButton" to="." method="_on_color_picker_button_color_changed"]
+[connection signal="color_changed" from="MainContainer/HBoxContainer/ToolsPanel/Tools/ColorPickerButton" to="MainContainer/HBoxContainer/ToolsPanel" method="_on_color_picker_button_color_changed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/ToolsPanel/Tools/HBoxContainer/UndoButton" to="." method="_on_undo_button_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/ToolsPanel/Tools/HBoxContainer/ClearButton" to="." method="_on_clear_button_pressed"]
+[connection signal="pressed" from="MainContainer/HBoxContainer/ToolsPanel/Tools/SaveButton" to="." method="_on_save_button_pressed"]
